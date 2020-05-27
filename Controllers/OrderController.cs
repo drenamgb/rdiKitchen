@@ -29,19 +29,31 @@ namespace kitchen.Controllers
             switch (idItem)
             {
                 case 1:
-                    price = 10.3;
+                    price = 18.3;
                     break;
 
                 case 2:
-                    price = 18.9;
+                    price = 14;
                     break;
 
                 case 3:
-                    price = 5.7;
+                    price = 25.9;
                     break;
 
                 case 4:
-                    price = 22.5;
+                    price = 12.5;
+                    break;
+                case 5:
+                    price = 7.5;
+                    break;
+                case 6:
+                    price = 6;
+                    break;
+                case 7:
+                    price = 3.7;
+                    break;
+                case 8:
+                    price = 4.5;
                     break;
             }
 
