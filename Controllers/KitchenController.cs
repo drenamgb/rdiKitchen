@@ -13,8 +13,10 @@ namespace kitchen.Controllers
     public class KitchenController : Controller
     {
         // GET: Kitchen
-        static readonly string waitListPath = WebConfigurationManager.AppSettings["waitListPath"];
-        static readonly string deliveryListPath = WebConfigurationManager.AppSettings["deliveryListPath"];
+        static readonly string directoryPath = WebConfigurationManager.AppSettings["directoryPath"];
+        static readonly string waitListFileNname = WebConfigurationManager.AppSettings["waitListFileName"];
+        static readonly string deliveryListFileName = WebConfigurationManager.AppSettings["deliveryListFileName"];
+
 
         public ActionResult Index()
         {
@@ -24,12 +26,21 @@ namespace kitchen.Controllers
         [HttpPost]
         public JsonResult UpdateOrder()
         {
-            List<Order> waitListOrder = ReadFile(waitListPath);
 
-            if (!System.IO.File.Exists(deliveryListPath))
+            string waitListPath = Path.Combine(directoryPath, waitListFileNname);
+            string deliveryListPath = Path.Combine(directoryPath, deliveryListFileName);
+            //bloco para criar o diretório e os arquivos
+
+            if (!Directory.Exists(directoryPath))
             {
+                Directory.CreateDirectory(directoryPath);
+
+                using (System.IO.File.Create(waitListPath)) { }
                 using (System.IO.File.Create(deliveryListPath)) { }
+
             }
+
+            List<Order> waitListOrder = ReadFile(waitListPath);
             List<Order> deliveryListOrder = ReadFile(deliveryListPath);
 
 

@@ -81,7 +81,7 @@
     });
 
     $("#lessQtd").click(function () {
-        if ($("#quantity").html() !== 1) {
+        if (parseInt($("#quantity").html()) !== 1) {
             quantity = parseInt($("#quantity").html()) - 1;
             $("#quantity").html(quantity);
 

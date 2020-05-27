@@ -177,7 +177,8 @@
     <Content Include="Content\img\icone_moto.png" />
     <Content Include="Content\img\ok.png" />
     <Content Include="Content\img\wait.png" />
-    <Content Include="Content\Order.css" />
+    <Content Include="Content\Kitchen\kitchen.css" />
+    <Content Include="Content\Order\Order.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

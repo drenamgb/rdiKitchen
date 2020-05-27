@@ -11,7 +11,9 @@ namespace kitchen.Controllers
     public class OrderController : Controller
     {
         // GET: Home        
-        static readonly string waitListPath = WebConfigurationManager.AppSettings["waitListPath"];
+        static readonly string directoryPath = WebConfigurationManager.AppSettings["directoryPath"];
+        static readonly string waitListFileNname = WebConfigurationManager.AppSettings["waitListFileName"];
+        static readonly string deliveryListFileName = WebConfigurationManager.AppSettings["deliveryListFileName"];
 
         public ActionResult Index()
         {
@@ -69,13 +71,20 @@ namespace kitchen.Controllers
 
             listOrders.Add(newOrder);
 
+            //bloco para criar o diretório e os arquivos
 
+            string waitListPath = Path.Combine(directoryPath, waitListFileNname);
+            string deliveryListPath = Path.Combine(directoryPath, deliveryListFileName);
 
-            if (!System.IO.File.Exists(waitListPath))
+            if (!Directory.Exists(directoryPath))
             {
+                Directory.CreateDirectory(directoryPath);
                 using (System.IO.File.Create(waitListPath)) { }
+                using (System.IO.File.Create(deliveryListPath)) { }
             }
 
+
+            //gravar o pedido no arquivo
             StreamWriter sw = new StreamWriter(waitListPath, true);
             Random random = new Random();
             int idOrder = random.Next(1, 100);
