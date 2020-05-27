@@ -89,7 +89,6 @@ C:\Users\Ricardo\source\repos\Kitchen\bin\pt-br\System.Web.Razor.resources.dll
 C:\Users\Ricardo\source\repos\Kitchen\bin\pt-br\System.Web.WebPages.resources.dll
 C:\Users\Ricardo\source\repos\Kitchen\bin\pt-br\System.Web.WebPages.Deployment.resources.dll
 C:\Users\Ricardo\source\repos\Kitchen\bin\pt-br\System.Web.WebPages.Razor.resources.dll
-C:\Users\Ricardo\source\repos\Kitchen\obj\Debug\kitchen.csprojAssemblyReference.cache
 C:\Users\Ricardo\source\repos\Kitchen\obj\Debug\kitchen.csproj.CoreCompileInputs.cache
 C:\Users\Ricardo\source\repos\Kitchen\obj\Debug\kitchen.csproj.CopyComplete
 C:\Users\Ricardo\source\repos\Kitchen\obj\Debug\kitchen.dll

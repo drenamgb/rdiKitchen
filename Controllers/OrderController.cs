@@ -12,7 +12,7 @@ namespace kitchen.Controllers
     {
         // GET: Home        
         static readonly string directoryPath = WebConfigurationManager.AppSettings["directoryPath"];
-        static readonly string waitListFileNname = WebConfigurationManager.AppSettings["waitListFileName"];
+        static readonly string waitListFileName = WebConfigurationManager.AppSettings["waitListFileName"];
         static readonly string deliveryListFileName = WebConfigurationManager.AppSettings["deliveryListFileName"];
 
         public ActionResult Index()
@@ -20,6 +20,18 @@ namespace kitchen.Controllers
             return View("Order");
         }
 
+        public bool checkIdOrder(int idOrder, List<Order> waitListOrder)
+        {
+            foreach (Order order in waitListOrder)
+            {
+                if (idOrder == order.IdOrder)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         [HttpPost]
         public JsonResult CheckPrice(int idItem)
@@ -60,32 +72,74 @@ namespace kitchen.Controllers
             return Json(price);
         }
 
+        public List<Order> ReadFile(string path)
+        {
+            List<Order> listOrders = new List<Order>();
+
+            StreamReader sr = new StreamReader(path);
+
+            Order order = new Order
+            {
+                ListItens = new List<Item>()
+            };
+            try
+            {
+                while (!sr.EndOfStream)
+                {
+                    string linha = sr.ReadLine();
+                    string[] infoPedido = linha.Split('|');
+
+                    if (infoPedido[0].Trim() == "Pedido")
+                    {
+                        if (order.ListItens.Count > 0)
+                            listOrders.Add(order);
+
+                        order = new Order
+                        {
+                            IdOrder = Convert.ToInt32(infoPedido[1]),
+                            TotalPrice = Convert.ToDecimal(infoPedido[2]),
+                            HourOrder = Convert.ToDateTime(infoPedido[3]),
+                            ListItens = new List<Item>()
+                        };
+                    }
+                    else
+                    {
+                        Item item = new Item
+                        {
+                            Name = infoPedido[1],
+                            Quantity = Convert.ToInt32(infoPedido[2]),
+                            Price = Convert.ToDecimal(infoPedido[3]),
+                            TotalPrice = Convert.ToDecimal(infoPedido[4]),
+                            TimeDelivery = Convert.ToInt32(infoPedido[5]),
+                            HourStart = Convert.ToDateTime(infoPedido[6]),
+                            HourEnd = Convert.ToDateTime(infoPedido[7])
+                        };
+                        order.ListItens.Add(item);
+                    };
+
+                }
+                listOrders.Add(order);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                sr.Close();
+            }
+
+            return listOrders;
+        }
+
         public int AddOrder(string listItensJSON)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             List<Item> listItem = serializer.Deserialize<List<Item>>(listItensJSON);
 
-            decimal totalPriceOrder = 0;
-            foreach (Item i in listItem)
-            {
-                totalPriceOrder += i.TotalPrice;
-                i.HourEnd = i.HourStart.AddSeconds(i.TimeDelivery);
-            }
-
-            List<Order> listOrders = new List<Order>();
-
-            Order newOrder = new Order
-            {
-                ListItens = listItem,
-                HourOrder = DateTime.Now,
-                TotalPrice = Math.Round(totalPriceOrder, 2)
-            };
-
-            listOrders.Add(newOrder);
-
             //bloco para criar o diretório e os arquivos
 
-            string waitListPath = Path.Combine(directoryPath, waitListFileNname);
+            string waitListPath = Path.Combine(directoryPath, waitListFileName);
             string deliveryListPath = Path.Combine(directoryPath, deliveryListFileName);
 
             if (!Directory.Exists(directoryPath))
@@ -95,34 +149,56 @@ namespace kitchen.Controllers
                 using (System.IO.File.Create(deliveryListPath)) { }
             }
 
+            decimal totalPriceOrder = 0;
+            foreach (Item i in listItem)
+            {
+                totalPriceOrder += i.TotalPrice;
+                i.HourEnd = i.HourStart.AddSeconds(i.TimeDelivery);
+            }
+
+            List<Order> listOrders = ReadFile(waitListPath);
+
+            Random random = new Random();
+            int idOrder = random.Next(1, 100);
+            while (checkIdOrder(idOrder, listOrders))
+            {
+                idOrder = random.Next(1, 100);
+            }
+
+            Order newOrder = new Order
+            {
+                IdOrder = idOrder,
+                ListItens = listItem,
+                HourOrder = DateTime.Now,
+                TotalPrice = Math.Round(totalPriceOrder, 2)
+            };
+
 
             //gravar o pedido no arquivo
             StreamWriter sw = new StreamWriter(waitListPath, true);
-            Random random = new Random();
-            int idOrder = random.Next(1, 100);
+
             try
             {
-                foreach (Order order in listOrders)
+
+                sw.Write("Pedido|");
+                sw.Write(newOrder.IdOrder + "|");
+                sw.Write(newOrder.TotalPrice + "|");
+                sw.Write(newOrder.HourOrder.ToString("HH:mm:ss"));
+                sw.WriteLine();
+                int cont = 1;
+                foreach (Item item in newOrder.ListItens)
                 {
-                    sw.Write("Pedido|");
-                    sw.Write(idOrder + "|");
-                    sw.Write(totalPriceOrder + "|");
-                    sw.Write(order.HourOrder.ToString("HH:mm:ss"));
+                    sw.Write(cont++ + "|");
+                    sw.Write(item.Name + "|");
+                    sw.Write(item.Quantity + "|");
+                    sw.Write(item.Price + "|");
+                    sw.Write(item.TotalPrice + "|");
+                    sw.Write(item.TimeDelivery + "|");
+                    sw.Write(item.HourStart + "|");
+                    sw.Write(item.HourEnd);
                     sw.WriteLine();
-                    int cont = 1;
-                    foreach (Item item in order.ListItens)
-                    {
-                        sw.Write(cont++ + "|");
-                        sw.Write(item.Name + "|");
-                        sw.Write(item.Quantity + "|");
-                        sw.Write(item.Price + "|");
-                        sw.Write(item.TotalPrice + "|");
-                        sw.Write(item.TimeDelivery + "|");
-                        sw.Write(item.HourStart + "|");
-                        sw.Write(item.HourEnd);
-                        sw.WriteLine();
-                    }
                 }
+
             }
             catch (Exception ex)
             {
