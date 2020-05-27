@@ -8,7 +8,7 @@ using System.Web.Script.Serialization;
 
 namespace kitchen.Controllers
 {
-    public class OrderController : Controller
+    public class OrderController : CommomController
     {
         // GET: Home        
         static readonly string directoryPath = WebConfigurationManager.AppSettings["directoryPath"];
@@ -34,7 +34,7 @@ namespace kitchen.Controllers
         }
 
         [HttpPost]
-        public JsonResult CheckPrice(int idItem)
+        public double CheckPrice(int idItem)
         {
 
             double price = 0;
@@ -69,86 +69,17 @@ namespace kitchen.Controllers
                     break;
             }
 
-            return Json(price);
+            return price;
         }
 
-        public List<Order> ReadFile(string path)
-        {
-            List<Order> listOrders = new List<Order>();
 
-            StreamReader sr = new StreamReader(path);
-
-            Order order = new Order
-            {
-                ListItens = new List<Item>()
-            };
-            try
-            {
-                while (!sr.EndOfStream)
-                {
-                    string linha = sr.ReadLine();
-                    string[] infoPedido = linha.Split('|');
-
-                    if (infoPedido[0].Trim() == "Pedido")
-                    {
-                        if (order.ListItens.Count > 0)
-                            listOrders.Add(order);
-
-                        order = new Order
-                        {
-                            IdOrder = Convert.ToInt32(infoPedido[1]),
-                            TotalPrice = Convert.ToDecimal(infoPedido[2]),
-                            HourOrder = Convert.ToDateTime(infoPedido[3]),
-                            ListItens = new List<Item>()
-                        };
-                    }
-                    else
-                    {
-                        Item item = new Item
-                        {
-                            Name = infoPedido[1],
-                            Quantity = Convert.ToInt32(infoPedido[2]),
-                            Price = Convert.ToDecimal(infoPedido[3]),
-                            TotalPrice = Convert.ToDecimal(infoPedido[4]),
-                            TimeDelivery = Convert.ToInt32(infoPedido[5]),
-                            HourStart = Convert.ToDateTime(infoPedido[6]),
-                            HourEnd = Convert.ToDateTime(infoPedido[7])
-                        };
-                        order.ListItens.Add(item);
-                    };
-
-                }
-                listOrders.Add(order);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                sr.Close();
-            }
-
-            return listOrders;
-        }
-
+        [HttpPost]
         public int AddOrder(string listItensJSON)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             List<Item> listItem = serializer.Deserialize<List<Item>>(listItensJSON);
 
-            //bloco para criar o diretório e os arquivos
-
-            string waitListPath = Path.Combine(directoryPath, waitListFileName);
-            string deliveryListPath = Path.Combine(directoryPath, deliveryListFileName);
-
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath);
-                using (System.IO.File.Create(waitListPath)) { }
-                using (System.IO.File.Create(deliveryListPath)) { }
-            }
-
+           
             decimal totalPriceOrder = 0;
             foreach (Item i in listItem)
             {
@@ -156,7 +87,7 @@ namespace kitchen.Controllers
                 i.HourEnd = i.HourStart.AddSeconds(i.TimeDelivery);
             }
 
-            List<Order> listOrders = ReadFile(waitListPath);
+            List<Order> listOrders = ReadFile(waitListFileName);
 
             Random random = new Random();
             int idOrder = random.Next(1, 100);
@@ -173,9 +104,8 @@ namespace kitchen.Controllers
                 TotalPrice = Math.Round(totalPriceOrder, 2)
             };
 
-
-            //gravar o pedido no arquivo
-            StreamWriter sw = new StreamWriter(waitListPath, true);
+            string fileNamePath = Path.Combine(directoryPath, waitListFileName);
+            StreamWriter sw = new StreamWriter(fileNamePath, true);
 
             try
             {

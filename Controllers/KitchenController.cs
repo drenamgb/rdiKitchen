@@ -10,13 +10,12 @@ using System.Web.Mvc;
 
 namespace kitchen.Controllers
 {
-    public class KitchenController : Controller
+    public class KitchenController : CommomController
     {
         // GET: Kitchen
-        static readonly string directoryPath = WebConfigurationManager.AppSettings["directoryPath"];
-        static readonly string waitListFileNname = WebConfigurationManager.AppSettings["waitListFileName"];
+        static readonly string waitListFileName = WebConfigurationManager.AppSettings["waitListFileName"];
         static readonly string deliveryListFileName = WebConfigurationManager.AppSettings["deliveryListFileName"];
-
+        static readonly string directoryPath = WebConfigurationManager.AppSettings["directoryPath"];
 
         public ActionResult Index()
         {
@@ -24,24 +23,10 @@ namespace kitchen.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateOrder()
+        public JsonResult UpdateListOrder()
         {
-
-            string waitListPath = Path.Combine(directoryPath, waitListFileNname);
-            string deliveryListPath = Path.Combine(directoryPath, deliveryListFileName);
-            //bloco para criar o diretório e os arquivos
-
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath);
-
-                using (System.IO.File.Create(waitListPath)) { }
-                using (System.IO.File.Create(deliveryListPath)) { }
-
-            }
-
-            List<Order> waitListOrder = ReadFile(waitListPath);
-            List<Order> deliveryListOrder = ReadFile(deliveryListPath);
+            List<Order> waitListOrder = ReadFile(waitListFileName);
+            List<Order> deliveryListOrder = ReadFile(deliveryListFileName);
 
 
             bool allItemReady = true;
@@ -69,15 +54,16 @@ namespace kitchen.Controllers
 
             waitListOrder.RemoveAll(x => x.OrderReady == true);
 
-            UpdateFile(waitListPath, waitListOrder);
-            UpdateFile(deliveryListPath, deliveryListOrder);
+            UpdateFile(waitListFileName, waitListOrder);
+            deliveryListOrder = deliveryListOrder.OrderByDescending(x => x.HourOrder).ToList<Order>();
+            UpdateFile(deliveryListFileName, deliveryListOrder);
 
             return Json(new { waitListOrder, deliveryListOrder });
         }
-        public void UpdateFile(string path, List<Order> listOrders)
+        public void UpdateFile(string fileName, List<Order> listOrders)
         {
-
-            StreamWriter sw = new StreamWriter(path);
+            string fileNamePath = Path.Combine(directoryPath, fileName);
+            StreamWriter sw = new StreamWriter(fileNamePath);
 
             try
             {
@@ -112,66 +98,5 @@ namespace kitchen.Controllers
                 sw.Close();
             }
         }
-
-        public List<Order> ReadFile(string path)
-        {
-            List<Order> listOrders = new List<Order>();
-
-            StreamReader sr = new StreamReader(path);
-
-            Order order = new Order
-            {
-                ListItens = new List<Item>()
-            };
-            try
-            {
-                while (!sr.EndOfStream)
-                {
-                    string linha = sr.ReadLine();
-                    string[] infoPedido = linha.Split('|');
-
-                    if (infoPedido[0].Trim() == "Pedido")
-                    {
-                        if (order.ListItens.Count > 0)
-                            listOrders.Add(order);
-
-                        order = new Order
-                        {
-                            IdOrder = Convert.ToInt32(infoPedido[1]),
-                            TotalPrice = Convert.ToDecimal(infoPedido[2]),
-                            HourOrder = Convert.ToDateTime(infoPedido[3]),
-                            ListItens = new List<Item>()
-                        };
-                    }
-                    else
-                    {
-                        Item item = new Item
-                        {
-                            Name = infoPedido[1],
-                            Quantity = Convert.ToInt32(infoPedido[2]),
-                            Price = Convert.ToDecimal(infoPedido[3]),
-                            TotalPrice = Convert.ToDecimal(infoPedido[4]),
-                            TimeDelivery = Convert.ToInt32(infoPedido[5]),
-                            HourStart = Convert.ToDateTime(infoPedido[6]),
-                            HourEnd = Convert.ToDateTime(infoPedido[7])
-                        };
-                        order.ListItens.Add(item);
-                    };
-
-                }
-                listOrders.Add(order);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                sr.Close();
-            }
-
-            return listOrders;
-        }
-
     }
 }

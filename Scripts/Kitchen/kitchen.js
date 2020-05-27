@@ -5,14 +5,14 @@
     setInterval(function () {
 
         $.ajax({
-            url: "/Kitchen/UpdateOrder",
+            url: "/Kitchen/UpdateListOrder",
             method: "POST",
             async: false,
             success: function (rs) {
                 waitList(rs.waitListOrder);
                 deliveryList(rs.deliveryListOrder);
             }, error: function (rs) {
-                alert(rs);
+                alert(rs.data);
             }
         })
 
@@ -40,7 +40,7 @@
     function waitList(waitList) {
         $("#waitList").html("");
         $("#waitList").append("<thead>");
-        $("#waitList").append("<tr><th>Pedido</th><th>Qtd / Item</th><th>Tempo de Preparo</th></tr>");
+        $("#waitList").append("<tr><th>Pedido</th><th>Qtd / Item Tempo de Preparo</th></tr>");
         $("#waitList").append("<tbody>");
 
         for (i = 0; i < waitList.length; i++) {
@@ -56,12 +56,12 @@
                     relogio = " <img src='/content/img/ok.png' width='15px'>"
                 }
 
-                detalhesItens +=  waitList[i].ListItens[j].Quantity + "  " + waitList[i].ListItens[j].Name;
+                detalhesItens += waitList[i].ListItens[j].Quantity + " " + waitList[i].ListItens[j].Name +" " + relogio;
 
                 detalhesItens += "<br>";
             }
 
-            $("#waitList").append("<tr><td>" + waitList[i]["IdOrder"] + "</td><td>" + detalhesItens + "</td><td>"+relogio+"</td></tr>");
+            $("#waitList").append("<tr><td>" + waitList[i]["IdOrder"] + "</td><td>" + detalhesItens + "</td></tr>");
         }
     }
 
@@ -76,7 +76,7 @@
             var detalhesItens = "";
             for (j = 0; j < deliveryList[i].ListItens.length > 0; j++) {
 
-                detalhesItens +=  deliveryList[i].ListItens[j].Quantity + "  " + deliveryList[i].ListItens[j].Name + img;
+                detalhesItens += deliveryList[i].ListItens[j].Quantity + "  " + deliveryList[i].ListItens[j].Name + " " + img;
                 detalhesItens += "<br>";
             }
 

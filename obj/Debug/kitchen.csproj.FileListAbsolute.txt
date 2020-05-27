@@ -93,3 +93,4 @@ C:\Users\Ricardo\source\repos\Kitchen\obj\Debug\kitchen.csproj.CoreCompileInputs
 C:\Users\Ricardo\source\repos\Kitchen\obj\Debug\kitchen.csproj.CopyComplete
 C:\Users\Ricardo\source\repos\Kitchen\obj\Debug\kitchen.dll
 C:\Users\Ricardo\source\repos\Kitchen\obj\Debug\kitchen.pdb
+C:\Users\Ricardo\source\repos\Kitchen\obj\Debug\kitchen.csprojAssemblyReference.cache
