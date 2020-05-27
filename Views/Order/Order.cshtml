@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Order</title>
+    <link rel="icon" type="imagem/png" href="~/Content/img/icone_moto.png" />
+
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/Order/order.js"></script>
+</head>
+<body>   
+    <div>
+        <div class="row">
+            <div class="col-lg-4">
+
+                <div>
+                    <label>
+                        Mc Lanche:
+                    </label>
+                    <select id="selectedItem" class="form-control">
+                        <option>Selectione um Lanche</option>
+                        <option value="38">Carne</option>
+                        <option value="47">Frango</option>
+                        <option value="53">Hamburguer</option>
+                        <option value="120">Batata</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>
+                        Quantidade:
+                    </label>
+
+                    <button id="lessQtd" class="btn btn-default"> - </button>
+                    <label id="quantity">1</label>
+                    <button id="moreQtd" class="btn btn-default"> + </button>
+                </div>
+                <div>
+                    <input type="text" id="price" hidden>
+                    <label id="totalPrice"></label>
+                </div>
+                <div>
+                    <button class="btn btn-primary" id="addItemList">Adicionar</button>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Lanche</th>
+                                <th scope="col">Qtd</th>
+                                <th scope="col">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="preListOrder">
+                        </tbody>
+                    </table>
+                    <label id="totalPriceListOrder"></label>
+                </div>
+                <hr />
+                <div>
+                    <button id="clearPreListOrder" class="btn btn-default">Limpar</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div>
+
+            <button id="addOrder" class="btn btn-success">Finalizar Pedido</button>
+        
+            <a href="/Kitchen/Index" class="btn btn-primary" id="checkOrders">Acompanhar Pedidos</a>
+        </div>
+    </div>
+</body>
+</html>

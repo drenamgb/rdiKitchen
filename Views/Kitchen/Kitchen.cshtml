@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Kitchen</title>
+    <link rel="icon" type="imagem/png" href="~/Content/img/icone_moto.png" />
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/Kitchen/kitchen.js"></script>
+</head>
+<body>
+    
+    <div>
+        <div>
+            <a href="/Order/Index" class="btn btn-primary">Fazer Pedido</a>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-lg-4">
+
+                <div>
+                    <h4>
+                        Pedidos na Cozinha
+                    </h4>
+                </div>
+
+                <table id="waitList" class="table"></table>
+
+            </div>
+            <div class="col-lg-2">
+            </div>
+            <div class="col-lg-3">
+                <div>
+                    <h4>
+                        Pedidos Prontos
+                    </h4>
+                </div>
+
+                <table id="deliveryList" class="table">
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
