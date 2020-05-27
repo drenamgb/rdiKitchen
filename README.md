@@ -1,7 +1,7 @@
 # kitchen
  Repositório para projeto RDI
-Essa web aplicação irá criar dois arquivos no diretório C:\Users\Public. Caso não tenha permissão para gravar é preciso alterar as chaves no webconfig
+Essa web aplicação irá criar um diretório e dois arquivos no diretório C:\Users\Public. Caso não tenha permissão para gravar é preciso alterar as chaves no webconfig
 
-add key="waitListPath" value="C:\Users\Public\waitList.txt"
+Diretório
 
-add key="deliveryListPath" value="C:\Users\Public\deliveryList.txt"
+add key="directory" value="C:\Users\Public\kitchen"
