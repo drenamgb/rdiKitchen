@@ -11,10 +11,8 @@
             success: function (rs) {
                 waitList(rs.waitListOrder);
                 deliveryList(rs.deliveryListOrder);
-            }, error: function () {
-
-            }, complete: function () {
-
+            }, error: function (rs) {
+                alert(rs);
             }
         })
 
@@ -42,7 +40,7 @@
     function waitList(waitList) {
         $("#waitList").html("");
         $("#waitList").append("<thead>");
-        $("#waitList").append("<tr><th>Pedido</th><th>Detalhes</th></tr>");
+        $("#waitList").append("<tr><th>Pedido</th><th>Qtd / Item</th><th>Tempo de Preparo</th></tr>");
         $("#waitList").append("<tbody>");
 
         for (i = 0; i < waitList.length; i++) {
@@ -58,22 +56,31 @@
                     relogio = " <img src='/content/img/ok.png' width='15px'>"
                 }
 
-                detalhesItens += "qtd: " + waitList[i].ListItens[j].Quantity + " - " + waitList[i].ListItens[j].Name + " " + relogio;
+                detalhesItens +=  waitList[i].ListItens[j].Quantity + "  " + waitList[i].ListItens[j].Name;
 
                 detalhesItens += "<br>";
             }
 
-            $("#waitList").append("<tr><td>" + waitList[i]["IdOrder"] + "</td><td>" + detalhesItens + "</td></tr>");
+            $("#waitList").append("<tr><td>" + waitList[i]["IdOrder"] + "</td><td>" + detalhesItens + "</td><td>"+relogio+"</td></tr>");
         }
     }
 
     function deliveryList(deliveryList) {
         $("#deliveryList").html("");
         $("#deliveryList").append("<thead>");
-        $("#deliveryList").append("<tr><th>Pedido</th><th></th></tr>");
+        $("#deliveryList").append("<tr><th>Pedido</th><th>Qtd / Item</th></tr>");
         $("#deliveryList").append("<tbody>");
+
+        var img = "<img src='/content/img/ok.png' width='15px'>";
         for (i = 0; i < deliveryList.length; i++) {
-            $("#deliveryList").append("<tr><td>" + deliveryList[i]["IdOrder"] + "</td><td><img src='/content/img/ok.png' width='15px'></td></tr>");
+            var detalhesItens = "";
+            for (j = 0; j < deliveryList[i].ListItens.length > 0; j++) {
+
+                detalhesItens +=  deliveryList[i].ListItens[j].Quantity + "  " + deliveryList[i].ListItens[j].Name + img;
+                detalhesItens += "<br>";
+            }
+
+            $("#deliveryList").append("<tr><td>" + deliveryList[i]["IdOrder"] + "</td><td>" + detalhesItens + "</td></tr>");
         }
     }
 

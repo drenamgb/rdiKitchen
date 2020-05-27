@@ -30,8 +30,8 @@
                     $("#quantity").html(1);
                     totalPrice = $("#quantity").html() * price;
                     $("#totalPrice").html(totalPrice.toLocaleString("pt-br", { style: "currency", currency: "BRL" }))
-                }, error: function () {
-
+                }, error: function (rs) {
+                    alert(rs)
                 }
             });
         }
@@ -51,8 +51,8 @@
             },
             success: function (r) {
                 alert("Pedido: " + r);
-            }, error: function () {
-
+            }, error: function (rs) {
+                alert(rs);
             }
         });
 
