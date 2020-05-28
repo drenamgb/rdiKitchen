@@ -47,7 +47,7 @@
         $("#waitList").append("<tbody>");
 
         if (waitList.length === 0) {
-            $("#waitList").append("<tr><td align='center' colspan='2'><font size='2px' color='#222222'><strong>AGUARDANDO...</strong></font></td></tr>");
+            $("#waitList").append("<tr><td align='center' colspan='2'><font size='2px' color='#222222'><strong>... Aguardando</strong></font></td></tr>");
         }
 
         for (i = 0; i < waitList.length; i++) {
@@ -80,7 +80,7 @@
 
         if (deliveryList.length === 0) {
 
-            $("#deliveryList").append("<tr><td align='center' colspan='2'><font size='2px' color='#222222'><strong>...Em preparo</strong></font></td></tr>");
+            $("#deliveryList").append("<tr><td align='center' colspan='2'><font size='2px' color='#222222'><strong>... Em preparo</strong></font></td></tr>");
         }
 
         var img = "<img src='/content/img/ok.png' width='15px'>";
