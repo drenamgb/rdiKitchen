@@ -1,11 +1,10 @@
 # kitchen
-<h4>Projeto Kitchen</h4>
+<h4>Projeto</h4>
 Esta aplicação simula a retirada de pedidos e os processos interno na cozinha, mostrando o tempo de preparo do pedido e sinalizando quando esse estiver pronto.
 <hr>
 <h4>Tecnologias</h4>
 
-Projeto desenvolvido em ASP.Net com padrão de projetos em MVC
-
+O Projeto foi desenvolvido em ASP.Net com padrão de projetos em MVC
 
 <b>Backend</b>
 <ul>
@@ -29,9 +28,7 @@ Projeto desenvolvido em ASP.Net com padrão de projetos em MVC
 
 <hr>
 <h4>Como executar</h4>
-Para executar esta solução é preciso ter o diretório em C:\Users\Public e permissão de criação de diretório e arquivor. 
+Para executar esta solução é preciso ter o diretório C:\Users\Public e permissão de criação de diretório e arquivos. 
 Para alterar a pasta é preciso alterar as chaves no webconfig da solução
-
-WebConfig
-
-add key="directory" value="C:\Users\Public\kitchen"
+<br>
+<b>add key="directory" value="C:\Users\Public\kitchen"</b>
