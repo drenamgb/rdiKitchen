@@ -9,13 +9,12 @@
     <script src="~/Scripts/bootstrap.js"></script>
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <script src="~/Scripts/Kitchen/kitchen.js"></script>
-    <link href="~/Content/Kitchen/kitchen.css" rel="stylesheet" />
+    <link href="~/Content/Kitchen/Kitchen.css" rel="stylesheet" />
 </head>
-<body>
-    
-    <div>
+<body>    
+    <div class="container">
         <div>
-            <a href="/Order/Index" class="btn btn-primary">Fazer Pedido</a>
+            <a href="/Order/Index" class="btn btn-primary">Novo Pedido</a>
         </div>
         <hr />
         <div class="row">
@@ -41,6 +40,9 @@
 
                 <table id="deliveryList" class="table table-condensed">
                 </table>
+                <div>
+                    <button class="btn btn-danger" id="btnClearListDelivery">Limpar</button>
+                </div>
             </div>
         </div>
     </div>

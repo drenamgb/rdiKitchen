@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace kitchen.Models
 {
@@ -13,7 +10,7 @@ namespace kitchen.Models
         public decimal TotalPrice { get; set; }
         public int TimeDelivery { get; set; }
         public DateTime HourStart { get; set; }
-        public DateTime HourEnd { get; set; }        
+        public DateTime HourEnd { get; set; }
         public Item()
         {
             HourStart = DateTime.Now;

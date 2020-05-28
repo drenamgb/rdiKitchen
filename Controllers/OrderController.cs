@@ -1,8 +1,8 @@
-﻿using System;
+﻿using kitchen.Models;
+using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
-using kitchen.Models;
 using System.Web.Configuration;
+using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
 namespace kitchen.Controllers
@@ -15,25 +15,7 @@ namespace kitchen.Controllers
         public ActionResult Index()
         {
             return View("Order");
-        }
-
-        public bool ExistIdOrder(int idOrder, List<Order> listOrder)
-        {
-            bool idOrderExist = true;
-            while (idOrderExist)
-            {
-                foreach (Order order in listOrder)
-                {
-                    if (order.IdOrder == idOrder)
-                    {
-                        return true;
-                    }
-                }
-                idOrderExist = false;
-            }
-
-            return idOrderExist;
-        }
+        }        
 
         [HttpPost]
         public double CheckPrice(int idItem)
@@ -90,10 +72,10 @@ namespace kitchen.Controllers
 
             //gera novo numero de pedido
             Random random = new Random();
-            int idOrder = random.Next(1, 100);
-            while (ExistIdOrder(idOrder, listOrders))
+            int idOrder = random.Next(10, 100);
+            while (Order.ExistIdOrder(idOrder, listOrders))
             {
-                idOrder = random.Next(1, 100);
+                idOrder = random.Next(10, 100);
             }
 
             Order newOrder = new Order

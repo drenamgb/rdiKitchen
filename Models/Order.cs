@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Web;
 
 namespace kitchen.Models
 {
@@ -13,10 +10,28 @@ namespace kitchen.Models
         public List<Item> ListItens { get; set; }
         public decimal TotalPrice { get; set; }
         public bool OrderReady { get; set; }
-        public  Order()
+        public Order()
         {
             HourOrder = DateTime.Now;
             OrderReady = false;
+        }
+
+        public static bool ExistIdOrder(int idOrder, List<Order> listOrder)
+        {
+            bool idOrderExist = true;
+            while (idOrderExist)
+            {
+                foreach (Order order in listOrder)
+                {
+                    if (order.IdOrder == idOrder)
+                    {
+                        return true;
+                    }
+                }
+                idOrderExist = false;
+            }
+
+            return idOrderExist;
         }
     }
 }

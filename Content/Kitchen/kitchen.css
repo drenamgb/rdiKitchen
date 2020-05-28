@@ -1,2 +1,16 @@
 ﻿body {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    position: relative;
+    top: 50px;
+}
+
+table{
+    background-color:#F1F1F1;
+    
+    border:2px solid #CCC;
+    
 }

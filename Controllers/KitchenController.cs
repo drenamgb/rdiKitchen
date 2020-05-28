@@ -1,10 +1,6 @@
 ﻿using kitchen.Models;
-using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Web.Configuration;
 using System.Web.Mvc;
 
@@ -22,7 +18,13 @@ namespace kitchen.Controllers
             return View("Kitchen");
         }
 
-        [HttpPost]
+        public JsonResult DeleteDeliveryList()
+        {
+            CheckAndCreateDirectoryAndFile(deliveryListFileName);
+            DeleteFile(deliveryListFileName);
+            return Json(true);
+        }
+
         public JsonResult UpdateListOrder()
         {
             List<Order> waitListOrder = ReadFile(waitListFileName);

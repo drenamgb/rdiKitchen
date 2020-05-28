@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
 
@@ -18,7 +16,7 @@ namespace kitchen.Controllers
 
         }
 
-        public void checkDirectoryAndFile(string fileName)
+        public void CheckAndCreateDirectoryAndFile(string fileName)
         {
             string fileNamePath = Path.Combine(directoryPath, fileName);
 
@@ -51,9 +49,33 @@ namespace kitchen.Controllers
             }
         }
 
+        public void DeleteFile(string fileName)
+        {
+            string fileNamePath = Path.Combine(directoryPath, fileName);
+
+            try
+            {
+                if (Directory.Exists(directoryPath))
+                {
+                    if (System.IO.File.Exists(fileNamePath))
+                    {
+                        System.IO.File.Delete(fileNamePath);
+                    }
+                }
+            }
+            catch (IOException ex)
+            {
+                throw new IOException(ex.Message.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
         public List<Order> ReadFile(string fileName)
         {
-            checkDirectoryAndFile(fileName);
+            CheckAndCreateDirectoryAndFile(fileName);
             string fileNamePath = Path.Combine(directoryPath, fileName);
             StreamReader sr = new StreamReader(fileNamePath);
 
