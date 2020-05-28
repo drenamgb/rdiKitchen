@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace kitchen.Controllers
 {
-    public class KitchenController : CommomController
+    public class KitchenController : BaseController
     {
         // GET: Kitchen
         static readonly string waitListFileName = WebConfigurationManager.AppSettings["waitListFileName"];
@@ -28,12 +28,11 @@ namespace kitchen.Controllers
             List<Order> waitListOrder = ReadFile(waitListFileName);
             List<Order> deliveryListOrder = ReadFile(deliveryListFileName);
 
-
             bool allItemReady = true;
             foreach (Order order in waitListOrder)
             {
                 List<Item> listItens = order.ListItens;
-
+                allItemReady = true;
                 foreach (Item i in listItens)
                 {
                     TimeSpan ts = i.HourEnd - DateTime.Now;
@@ -48,55 +47,20 @@ namespace kitchen.Controllers
 
                 if (order.OrderReady)
                 {
-                    deliveryListOrder.Add(order);
+                    //deliveryListOrder.Add(order);
+                    AddOrderList(deliveryListFileName, order);
                 }
             }
 
             waitListOrder.RemoveAll(x => x.OrderReady == true);
 
             UpdateFile(waitListFileName, waitListOrder);
-            deliveryListOrder = deliveryListOrder.OrderByDescending(x => x.HourOrder).ToList<Order>();
-            UpdateFile(deliveryListFileName, deliveryListOrder);
+
+            //deliveryListOrder = deliveryListOrder.OrderByDescending(x => x.HourOrder).ToList<Order>();
+            //UpdateFile(deliveryListFileName, deliveryListOrder);
 
             return Json(new { waitListOrder, deliveryListOrder });
         }
-        public void UpdateFile(string fileName, List<Order> listOrders)
-        {
-            string fileNamePath = Path.Combine(directoryPath, fileName);
-            StreamWriter sw = new StreamWriter(fileNamePath);
 
-            try
-            {
-                foreach (Order order in listOrders)
-                {
-                    sw.Write("Pedido|");
-                    sw.Write(order.IdOrder + "|");
-                    sw.Write(order.TotalPrice + "|");
-                    sw.Write(order.HourOrder.ToString("HH:mm:ss"));
-                    sw.WriteLine();
-                    int cont = 1;
-                    foreach (Item item in order.ListItens)
-                    {
-                        sw.Write(cont++ + "|");
-                        sw.Write(item.Name + "|");
-                        sw.Write(item.Quantity + "|");
-                        sw.Write(item.Price + "|");
-                        sw.Write(item.TotalPrice + "|");
-                        sw.Write(item.TimeDelivery + "|");
-                        sw.Write(item.HourStart + "|");
-                        sw.Write(item.HourEnd);
-                        sw.WriteLine();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                sw.Close();
-            }
-        }
     }
 }

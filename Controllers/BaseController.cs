@@ -9,19 +9,17 @@ using System.Web.Mvc;
 
 namespace kitchen.Controllers
 {
-    public class CommomController : Controller
+    public class BaseController : Controller
     {
         static readonly string directoryPath = WebConfigurationManager.AppSettings["directoryPath"];
 
-        public CommomController()
+        public BaseController()
         {
 
         }
 
         public void checkDirectoryAndFile(string fileName)
         {
-            //bloco para criar o diretório e os arquivos
-
             string fileNamePath = Path.Combine(directoryPath, fileName);
             if (!Directory.Exists(directoryPath))
             {
@@ -89,9 +87,12 @@ namespace kitchen.Controllers
                     };
                 }
 
-                listOrders.Add(order);
+                if (order.IdOrder == 0)
+                    listOrders = new List<Order>();
+                else
+                    listOrders.Add(order);
 
-                return listOrders;  //pode dar erro, botar depois do try cath finally
+                return listOrders;
             }
             catch (Exception ex)
             {
@@ -103,5 +104,81 @@ namespace kitchen.Controllers
             }
         }
 
+        public void AddOrderList(string fileName, Order newOrder)
+        {
+            string fileNamePath = Path.Combine(directoryPath, fileName);
+            StreamWriter sw = new StreamWriter(fileNamePath, true);
+
+            try
+            {
+
+                sw.Write("Pedido|");
+                sw.Write(newOrder.IdOrder + "|");
+                sw.Write(newOrder.TotalPrice + "|");
+                sw.Write(newOrder.HourOrder.ToString("HH:mm:ss"));
+                sw.WriteLine();
+                int cont = 1;
+                foreach (Item item in newOrder.ListItens)
+                {
+                    sw.Write(cont++ + "|");
+                    sw.Write(item.Name + "|");
+                    sw.Write(item.Quantity + "|");
+                    sw.Write(item.Price + "|");
+                    sw.Write(item.TotalPrice + "|");
+                    sw.Write(item.TimeDelivery + "|");
+                    sw.Write(item.HourStart + "|");
+                    sw.Write(item.HourEnd);
+                    sw.WriteLine();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                sw.Close();
+            }
+        }
+
+        public void UpdateFile(string fileName, List<Order> listOrders)
+        {
+            string fileNamePath = Path.Combine(directoryPath, fileName);
+            StreamWriter sw = new StreamWriter(fileNamePath);
+
+            try
+            {
+                foreach (Order order in listOrders)
+                {
+                    sw.Write("Pedido|");
+                    sw.Write(order.IdOrder + "|");
+                    sw.Write(order.TotalPrice + "|");
+                    sw.Write(order.HourOrder.ToString("HH:mm:ss"));
+                    sw.WriteLine();
+                    int cont = 1;
+                    foreach (Item item in order.ListItens)
+                    {
+                        sw.Write(cont++ + "|");
+                        sw.Write(item.Name + "|");
+                        sw.Write(item.Quantity + "|");
+                        sw.Write(item.Price + "|");
+                        sw.Write(item.TotalPrice + "|");
+                        sw.Write(item.TimeDelivery + "|");
+                        sw.Write(item.HourStart + "|");
+                        sw.Write(item.HourEnd);
+                        sw.WriteLine();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                sw.Close();
+            }
+        }
     }
 }

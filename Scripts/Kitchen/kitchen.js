@@ -18,8 +18,6 @@
 
     }, 1000);
 
-
-
     function ConvertDateTime(startdate) {
         var dateTimeMilliseconds = startdate.slice(6, startdate.length - 2);
         var dateReal = new Date(parseInt(dateTimeMilliseconds));
@@ -28,11 +26,6 @@
         var timeEnd = new Date(dateReal).getTime();
         var hourDiff = timeEnd - timeStart; //in ms
         var secDiff = hourDiff / 1000; //in s
-        //var minDiff = hourDiff / 60 / 1000; //in minutes
-        //var hDiff = hourDiff / 3600 / 1000; //in hours
-        //var humanReadable = {};
-        //humanReadable.hours = Math.floor(hDiff);
-        //humanReadable.minutes = minDiff - 60 * humanReadable.hours;
 
         return parseInt(secDiff);
     }
@@ -56,7 +49,7 @@
                     relogio = " <img src='/content/img/ok.png' width='15px'>"
                 }
 
-                detalhesItens += waitList[i].ListItens[j].Quantity + " " + waitList[i].ListItens[j].Name +" " + relogio;
+                detalhesItens += waitList[i].ListItens[j].Quantity + " " + waitList[i].ListItens[j].Name + " " + relogio;
 
                 detalhesItens += "<br>";
             }

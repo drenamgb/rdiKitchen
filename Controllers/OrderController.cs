@@ -8,29 +8,32 @@ using System.Web.Script.Serialization;
 
 namespace kitchen.Controllers
 {
-    public class OrderController : CommomController
+    public class OrderController : BaseController
     {
         // GET: Home        
-        static readonly string directoryPath = WebConfigurationManager.AppSettings["directoryPath"];
         static readonly string waitListFileName = WebConfigurationManager.AppSettings["waitListFileName"];
-        static readonly string deliveryListFileName = WebConfigurationManager.AppSettings["deliveryListFileName"];
 
         public ActionResult Index()
         {
             return View("Order");
         }
 
-        public bool checkIdOrder(int idOrder, List<Order> waitListOrder)
+        public bool ExistIdOrder(int idOrder, List<Order> listOrder)
         {
-            foreach (Order order in waitListOrder)
+            bool idOrderExist = true;
+            while (idOrderExist)
             {
-                if (idOrder == order.IdOrder)
+                foreach (Order order in listOrder)
                 {
-                    return true;
+                    if (order.IdOrder == idOrder)
+                    {
+                        return true;
+                    }
                 }
+                idOrderExist = false;
             }
 
-            return false;
+            return idOrderExist;
         }
 
         [HttpPost]
@@ -72,14 +75,12 @@ namespace kitchen.Controllers
             return price;
         }
 
-
         [HttpPost]
         public int AddOrder(string listItensJSON)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             List<Item> listItem = serializer.Deserialize<List<Item>>(listItensJSON);
 
-           
             decimal totalPriceOrder = 0;
             foreach (Item i in listItem)
             {
@@ -89,9 +90,10 @@ namespace kitchen.Controllers
 
             List<Order> listOrders = ReadFile(waitListFileName);
 
+            //gera novo numero de pedido
             Random random = new Random();
             int idOrder = random.Next(1, 100);
-            while (checkIdOrder(idOrder, listOrders))
+            while (ExistIdOrder(idOrder, listOrders))
             {
                 idOrder = random.Next(1, 100);
             }
@@ -104,42 +106,9 @@ namespace kitchen.Controllers
                 TotalPrice = Math.Round(totalPriceOrder, 2)
             };
 
-            string fileNamePath = Path.Combine(directoryPath, waitListFileName);
-            StreamWriter sw = new StreamWriter(fileNamePath, true);
+            AddOrderList(waitListFileName, newOrder);
 
-            try
-            {
-
-                sw.Write("Pedido|");
-                sw.Write(newOrder.IdOrder + "|");
-                sw.Write(newOrder.TotalPrice + "|");
-                sw.Write(newOrder.HourOrder.ToString("HH:mm:ss"));
-                sw.WriteLine();
-                int cont = 1;
-                foreach (Item item in newOrder.ListItens)
-                {
-                    sw.Write(cont++ + "|");
-                    sw.Write(item.Name + "|");
-                    sw.Write(item.Quantity + "|");
-                    sw.Write(item.Price + "|");
-                    sw.Write(item.TotalPrice + "|");
-                    sw.Write(item.TimeDelivery + "|");
-                    sw.Write(item.HourStart + "|");
-                    sw.Write(item.HourEnd);
-                    sw.WriteLine();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                sw.Close();
-            }
-
-            return idOrder;
+            return newOrder.IdOrder;
         }
     }
 }
