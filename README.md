@@ -1,7 +1,8 @@
 # kitchen
- Repositório para projeto RDI
-Essa web aplicação irá criar um diretório e dois arquivos no diretório C:\Users\Public. Caso não tenha permissão para gravar é preciso alterar as chaves no webconfig
 
-Diretório
+Para executar esta solução é preciso ter o diretório em C:\Users\Public e permissão de criação de diretório e arquivor. 
+Para alterar a pasta é preciso alterar as chaves no webconfig da solução
+
+WebConfig
 
 add key="directory" value="C:\Users\Public\kitchen"
