@@ -13,15 +13,10 @@ namespace kitchen.Models
         public List<Item> ListItens { get; set; }
         public decimal TotalPrice { get; set; }
         public bool OrderReady { get; set; }
-        public Order()
+        public  Order()
         {
             HourOrder = DateTime.Now;
             OrderReady = false;
-        }
-
-        public bool ricardo()
-        {
-            return false;
         }
     }
 }
