@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using System.IO;
 using kitchen.Models;
 using System.Web.Configuration;
 using System.Web.Script.Serialization;
@@ -39,7 +38,6 @@ namespace kitchen.Controllers
         [HttpPost]
         public double CheckPrice(int idItem)
         {
-
             double price = 0;
             switch (idItem)
             {

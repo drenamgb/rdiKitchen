@@ -21,20 +21,33 @@ namespace kitchen.Controllers
         public void checkDirectoryAndFile(string fileName)
         {
             string fileNamePath = Path.Combine(directoryPath, fileName);
-            if (!Directory.Exists(directoryPath))
+
+            try
             {
-                Directory.CreateDirectory(directoryPath);
-                if (!System.IO.File.Exists(fileNamePath))
+
+                if (!Directory.Exists(directoryPath))
                 {
-                    using (System.IO.File.Create(fileNamePath)) { }
+                    Directory.CreateDirectory(directoryPath);
+                    if (!System.IO.File.Exists(fileNamePath))
+                    {
+                        using (System.IO.File.Create(fileNamePath)) { }
+                    }
+                }
+                else
+                {
+                    if (!System.IO.File.Exists(fileNamePath))
+                    {
+                        using (System.IO.File.Create(fileNamePath)) { }
+                    }
                 }
             }
-            else
+            catch (IOException ex)
             {
-                if (!System.IO.File.Exists(fileNamePath))
-                {
-                    using (System.IO.File.Create(fileNamePath)) { }
-                }
+                throw new IOException(ex.Message.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
             }
         }
 
@@ -94,9 +107,13 @@ namespace kitchen.Controllers
 
                 return listOrders;
             }
+            catch (IOException ex)
+            {
+                throw new IOException(ex.Message.ToString());
+            }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
             finally
             {
@@ -111,7 +128,6 @@ namespace kitchen.Controllers
 
             try
             {
-
                 sw.Write("Pedido|");
                 sw.Write(newOrder.IdOrder + "|");
                 sw.Write(newOrder.TotalPrice + "|");
@@ -132,9 +148,13 @@ namespace kitchen.Controllers
                 }
 
             }
+            catch (IOException ex)
+            {
+                throw new IOException(ex.Message.ToString());
+            }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
             finally
             {
@@ -171,9 +191,13 @@ namespace kitchen.Controllers
                     }
                 }
             }
+            catch (IOException ex)
+            {
+                throw new IOException(ex.Message.ToString());
+            }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message.ToString());
             }
             finally
             {

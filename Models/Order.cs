@@ -18,5 +18,10 @@ namespace kitchen.Models
             HourOrder = DateTime.Now;
             OrderReady = false;
         }
+
+        public bool ricardo()
+        {
+            return false;
+        }
     }
 }
